@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from foodtaskerapp.models import Resturant
+from foodtaskerapp.models import Restaurant
 
 class UserForm(forms.ModelForm):
     email = forms.CharField(max_length=100, required=True)
@@ -10,7 +10,7 @@ class UserForm(forms.ModelForm):
         model = User
         fields = ("username", "password", "first_name", "last_name", "email")
 
-class ResturantForm(forms.ModelForm):
+class restaurantForm(forms.ModelForm):
     class Meta:
-        model = Resturant
+        model = Restaurant
         fields = ("name", "phone", "address", "logo")

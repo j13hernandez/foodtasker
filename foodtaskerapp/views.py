@@ -1,39 +1,55 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from foodtaskerapp.forms import UserForm, ResturantForm
+from foodtaskerapp.forms import UserForm, restaurantForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 
 # Create your views here.
 def home(request):
-    return redirect(resturant_home)
+    return redirect(restaurant_home)
 
-@login_required(login_url='/resturant/sign-in/')
-def resturant_home(request):
-    return render(request, 'resturant/home.html')
+@login_required(login_url='/restaurant/sign-in/')
+def restaurant_home(request):
+    return render(request, 'restaurant/home.html')
 
-def resturant_sign_up(request):
+@login_required(login_url='/restaurant/sign-in/')
+def restaurant_account(request):
+    return render(request, 'restaurant/account.html')
+
+@login_required(login_url='/restaurant/sign-in/')
+def restaurant_meal(request):
+    return render(request, 'restaurant/meal.html')
+
+@login_required(login_url='/restaurant/sign-in/')
+def restaurant_order(request):
+    return render(request, 'restaurant/order.html')
+
+@login_required(login_url='/restaurant/sign-in/')
+def restaurant_report(request):
+    return render(request, 'restaurant/report.html')
+
+def restaurant_sign_up(request):
     user_form = UserForm()
-    resturant_form = ResturantForm()
+    restaurant_form = restaurantForm()
 
     if request.method == "POST":
         user_form = UserForm(request.POST)
-        resturant_form = ResturantForm(request.POST, request.FILES)
+        restaurant_form = restaurantForm(request.POST, request.FILES)
 
-        if user_form.is_valid() and resturant_form.is_valid():
+        if user_form.is_valid() and restaurant_form.is_valid():
             new_user = User.objects.create_user(**user_form.cleaned_data)
-            new_resturant = resturant_form.save(commit=False) #creates only in memory
-            new_resturant.user = new_user
-            new_resturant.save() #saves to database
+            new_restaurant = restaurant_form.save(commit=False) #creates only in memory
+            new_restaurant.user = new_user
+            new_restaurant.save() #saves to database
 
             login(request, authenticate(
                 username = user_form.cleaned_data["username"],
                 password = user_form.cleaned_data["password"]
             ))
 
-            return redirect(resturant_home)
+            return redirect(restaurant_home)
 
-    return render(request, 'resturant/sign_up.html', {
+    return render(request, 'restaurant/sign_up.html', {
         "user_form": user_form,
-        "resturant_form": resturant_form
+        "restaurant_form": restaurant_form
     })
